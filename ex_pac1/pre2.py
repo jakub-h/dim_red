@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from plotnine import *
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 
 def get_dataset(num_of_dims):
@@ -46,6 +47,8 @@ def get_top5_neighbors(x_train, test_point, k):
 if __name__ == '__main__':
     dims = [1, 2, 4, 7, 10, 15]
     for dim in dims:
+        # Create dataset, split it, compute predictions and save datasets into pickels
+        '''
         ds = get_dataset(dim)
         y = target_function(ds['x1'])
         x_train, x_test, y_train, y_test = train_test_split(ds, y, test_size=0.5)
@@ -54,14 +57,21 @@ if __name__ == '__main__':
         x_test.to_pickle("../data/pre/{:}_x_test.pkl".format(dim))
         y_test.to_pickle("../data/pre/{:}_y_test.pkl".format(dim))
         y_pred.to_pickle("../data/pre/{:}_y_pred.pkl".format(dim))
+        '''
+        # Load datasets from pickles
         x_test = pd.read_pickle("../data/pre/{:}_x_test.pkl".format(dim))
         y_test = pd.read_pickle("../data/pre/{:}_y_test.pkl".format(dim))
         y_pred = pd.read_pickle("../data/pre/{:}_y_pred.pkl".format(dim))
         combined_test = pd.concat([x_test, y_test, y_pred], axis=1)
-        print(combined_test.head())
-        plot = (ggplot(aes(x='x1'), data=combined_test)
-                + geom_point(mapping=aes(y='y_true'))
-                + geom_point(mapping=aes(y='y_pred'), color="green", alpha=0.3)
-                + labs(y="y", title="{:} dimensions".format(dim)))
+        # Compute mean square error
+        error = mean_squared_error(y_test, y_pred)
+        # Scatter plot
+        scatter = (ggplot(aes(x='x1'), data=combined_test)
+                   + geom_point(mapping=aes(y='y_true'))
+                   + geom_point(mapping=aes(y='y_pred'), color="green", alpha=0.3)
+                   + labs(y="y")
+                   + ggtitle("{:} dimensions: MSE={:.4f}".format(dim, error)))
+        print(scatter)
+
 
 
