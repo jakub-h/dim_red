@@ -13,7 +13,7 @@ def get_dataset(num_of_dims):
     ds = pd.DataFrame(np.random.normal(0, 1, (2000, num_of_dims)))
     column_names = []
     for i in range(num_of_dims):
-        column_names.append("x{:}".format(i+1))
+        column_names.append("x{}".format(i+1))
     ds.columns = column_names
     return ds
 
@@ -23,7 +23,7 @@ def target_function(x):
 
 
 def k_nearest_neighbors(x_train, x_test, y_train, k):
-    print("K-nearest neighbors (k={:}): predicting...".format(k))
+    print("K-nearest neighbors (k={}): predicting...".format(k))
     result = pd.DataFrame(columns=['y_pred'])
     i = 0
     for index, test_point in x_test.iterrows():
@@ -32,7 +32,7 @@ def k_nearest_neighbors(x_train, x_test, y_train, k):
         y_prediction = pd.DataFrame(data=[np.mean(y_neighbors)], index=[index], columns=['y_pred'])
         result = result.append(y_prediction)
         if i % 10 == 0:
-            print("--> {:} %".format(i / 10))
+            print("--> {} %".format(i / 10))
         i += 1
     return result
 
@@ -54,14 +54,14 @@ if __name__ == '__main__':
         x_train, x_test, y_train, y_test = train_test_split(ds, y, test_size=0.5)
         y_test.name = "y_true"
         y_pred = k_nearest_neighbors(x_train, x_test, y_train, 5)
-        x_test.to_pickle("../data/pre/{:}_x_test.pkl".format(dim))
-        y_test.to_pickle("../data/pre/{:}_y_test.pkl".format(dim))
-        y_pred.to_pickle("../data/pre/{:}_y_pred.pkl".format(dim))
+        x_test.to_pickle("data/pre/{}_x_test.pkl".format(dim))
+        y_test.to_pickle("data/pre/{}_y_test.pkl".format(dim))
+        y_pred.to_pickle("data/pre/{}_y_pred.pkl".format(dim))
         '''
         # Load datasets from pickles
-        x_test = pd.read_pickle("../data/pre/{:}_x_test.pkl".format(dim))
-        y_test = pd.read_pickle("../data/pre/{:}_y_test.pkl".format(dim))
-        y_pred = pd.read_pickle("../data/pre/{:}_y_pred.pkl".format(dim))
+        x_test = pd.read_pickle("data/pre/{}_x_test.pkl".format(dim))
+        y_test = pd.read_pickle("data/pre/{}_y_test.pkl".format(dim))
+        y_pred = pd.read_pickle("data/pre/{}_y_pred.pkl".format(dim))
         combined_test = pd.concat([x_test, y_test, y_pred], axis=1)
         # Compute mean square error
         error = mean_squared_error(y_test, y_pred)
@@ -70,7 +70,7 @@ if __name__ == '__main__':
                    + geom_point(mapping=aes(y='y_true'))
                    + geom_point(mapping=aes(y='y_pred'), color="green", alpha=0.3)
                    + labs(y="y")
-                   + ggtitle("{:} dimensions: MSE={:.4f}".format(dim, error)))
+                   + ggtitle("{} dimensions: MSE={:.4f}".format(dim, error)))
         print(scatter)
 
 

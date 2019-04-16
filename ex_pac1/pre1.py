@@ -33,8 +33,8 @@ def task_a():
                 inside += 1
         print("--> d =", d)
         print("--> ratio =", inside/(outside + inside))
-        with open("../data/pre/a", "a") as output:
-            output.write("{:}\t{:}\n".format(d, inside/(inside + outside)))
+        with open("data/pre/a", "a") as output:
+            output.write("{}\t{}\n".format(d, inside/(inside + outside)))
 
 
 def task_b():
@@ -55,13 +55,13 @@ def task_b():
                     shell += 1
         print("--> d =", d)
         print("--> ratio = ", shell/inside)
-        with open("../data/pre/b", "a") as output:
-            output.write("{:}\t{:}\n".format(d, shell/inside))
+        with open("data/pre/b", "a") as output:
+            output.write("{}\t{}\n".format(d, shell/inside))
 
 
 if __name__ == '__main__':
     # task_a()
-    ratios = pd.read_csv("../data/pre/a", sep="\t", header=None)
+    ratios = pd.read_csv("data/pre/a", sep="\t", header=None)
     ratios.columns = ["d", "inside/all"]
     print(ratios)
     plot = (ggplot(aes("d", "inside/all"), data=ratios)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     print(plot)
 
     # task_b()
-    ratios = pd.read_csv("../data/pre/b", sep="\t", header=None)
+    ratios = pd.read_csv("data/pre/b", sep="\t", header=None)
     ratios.columns = ["d", "shell/inside"]
     print(ratios)
     plot = (ggplot(aes("d", "shell/inside"), data=ratios)
