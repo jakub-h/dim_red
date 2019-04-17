@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 
@@ -7,19 +8,34 @@ class PCA:
         self.target_dims = target_dims
         self.eig_vals = None
         self.eig_vecs = None
+        self.expl_variance = None
 
     def fit(self, x_train):
         x_std = StandardScaler().fit_transform(x_train)
         cov_mat = np.cov(x_std.T)
         self.eig_vals, self.eig_vecs = np.linalg.eig(cov_mat)
         sorted_indx = np.flip(np.argsort(self.eig_vals))
-        self.eig_vecs = self.eig_vecs[sorted_indx][:self.target_dims]
-        self.eig_vals = self.eig_vals[sorted_indx][:self.target_dims]
-        print("Eigenvalues\n{}".format(self.eig_vals))
-        print("Eigenvectors\n{}".format(self.eig_vecs))
+        self.eig_vecs = self.eig_vecs[sorted_indx]
+        self.eig_vals = self.eig_vals[sorted_indx]
+        self.expl_variance = []
+        for eigval in self.eig_vals:
+            self.expl_variance.append(eigval / self.eig_vals.sum())
+        self.expl_variance = np.array(self.expl_variance)
 
     def transform(self, x):
         x_std = StandardScaler().fit_transform(x)
+        transform_matrix = self.eig_vecs[:self.target_dims].T
+        scores = pd.DataFrame(x_std.dot(transform_matrix))
+        column_names = []
+        for i in range(self.target_dims):
+            column_names.append("pc{}".format(i+1))
+        scores.columns = column_names
+        return scores
+
+    def fit_transform(self, x_train):
+        self.fit(x_train)
+        return self.transform(x_train)
+
 
 
 
