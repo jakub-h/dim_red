@@ -65,7 +65,7 @@ for (blockcolumn_index in 1:nblockcolumns)    # Go over each block column
 
 #==============================INSERT YOUR CODE BELOW=====================
 
-#write.table(featuredata, file="data/partB/boat-blocked.csv", row.names=FALSE, col.names=FALSE, sep=",")
+write.table(featuredata, file="data/partB/boat-blocked.csv", row.names=FALSE, col.names=FALSE, sep=",")
 
 # Insert your own code between these lines to solve this exercise. 
 #
